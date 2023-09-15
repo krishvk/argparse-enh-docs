@@ -13,7 +13,8 @@ This is a collection of additional functionality built on top of argparse python
    :maxdepth: 2
    :caption: Contents:
 
-
+   argparse_api
+   argparse_shell
 
 Indices and tables
 ==================
