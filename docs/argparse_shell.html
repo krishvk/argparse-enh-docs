@@ -135,9 +135,10 @@ script and do a one line black magic in your shell script, boom! you have all th
 <span class="nb">eval</span><span class="w"> </span><span class="k">$(</span>sample_argparser.py<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$@</span><span class="s2">&quot;</span><span class="k">)</span>
 
 <span class="c1"># Print the parsed arguments</span>
-<span class="nb">set</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-P<span class="w"> </span><span class="s1">&#39;^opt_&#39;</span>
+<span class="nb">echo</span><span class="w"> </span><span class="nv">$opt_integer</span>
 </pre></div>
 </div>
+<p>All the options will be available as variables prefixed with <code class="code docutils literal notranslate"><span class="pre">opt_</span></code>.</p>
 </section>
 
 

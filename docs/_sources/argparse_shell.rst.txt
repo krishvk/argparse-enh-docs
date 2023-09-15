@@ -71,4 +71,6 @@ Add below like of code or equivalent in your shell script.
     eval $(sample_argparser.py "$@")
 
     # Print the parsed arguments
-    set | grep -P '^opt_'
+    echo $opt_integer
+
+All the options will be available as variables prefixed with :code:`opt_`.
