@@ -1,2 +1,83 @@
 Argparse For Shell Scripts
 --------------------------
+
+Python's :code:`argparse` is a great tool for creating command line interfaces. It is very easy to
+use and provides a lot of functionality out of the box. It also provides a way to generate automatic
+help from the argument specification. It benifits from a wide range of third party packages that
+extend its functionality and huge user base that can help you with any problems you might face.
+
+Shell scripts on the other hand suffer in this area. While there are ways to parse command line
+arguments in shell scripts like :code:`bash` etc. they do not offer so many capabilities as Python's
+:code:`argparse`, as simple as argument type validation or automatic help generation.
+
+Instead of reinventing the wheel for different shell scripting languages, this package provides a
+way to reuse the existing Python's :code:`argparse` package in shell scripts and get all the
+functionalities built into it in any shell scripting language of your choice.
+
+All you need to do is to write your argument specification in Python like you do for any python
+script and do a one line black magic in your shell script, boom! you have all the power of Python's
+:code:`argparse` in your shell script.
+
+If you are not familiar with Python's :code:`argparse` package, here is how it looks like:
+
+.. code-block:: python
+
+    import argparse
+
+    def getArgParser():
+        'Define and return the argparse object'
+
+        parser = argparse.ArgumentParser(description='Sample argparse argument parser')
+
+        parser.add_argument('-i', '--integer', type=int, default=10, help='Integer')
+        parser.add_argument('-s', '--string', type=str, required=True, help='String')
+        parser.add_argument('-l', '--list', type=str, nargs='+', help='List of Strings')
+
+        return parser
+
+
+    if __name__ == '__main__':
+        args = getArgParser().parse_args()
+        print(args.integer)
+
+Now, to use this in your shell script, you need to do the following:
+
+#. Import argparse_enh package.
+#. Instead of calling the :code:`parse_args()`, call :code:`ape.dumpArgs(getArgParser())`
+#. `eval` the output of the Python script in your shell script.
+
+Modified Python code looks like below
+
+.. code-block:: python
+
+    import argparse
+
+    import argparse_enh.argparse_enh as ape
+
+
+    def getArgParser():
+        'Define and return the argparse object'
+
+        parser = argparse.ArgumentParser(description='Sample argparse argument parser')
+
+        parser.add_argument('-i', '--integer', type=int, default=10, help='Integer')
+        parser.add_argument('-s', '--string', type=str, required=True, help='String')
+        parser.add_argument('-l', '--list', type=str, nargs='+', help='List of Strings')
+
+        return parser
+
+
+    if __name__ == '__main__':
+        ape.dumpArgs(getArgParser())
+
+Add below like of code or equivalent in your shell script.
+
+.. code-block:: bash
+
+    #!/bin/bash
+
+    # Parse the arguments using Python's argparse_enh
+    eval $(sample_argparser.py "$@")
+
+    # Print the parsed arguments
+    set | grep -P '^opt_'

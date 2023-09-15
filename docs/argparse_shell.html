@@ -76,6 +76,77 @@
              
   <section id="argparse-for-shell-scripts">
 <h1>Argparse For Shell Scripts<a class="headerlink" href="#argparse-for-shell-scripts" title="Link to this heading"></a></h1>
+<p>Python’s <code class="code docutils literal notranslate"><span class="pre">argparse</span></code> is a great tool for creating command line interfaces. It is very easy to
+use and provides a lot of functionality out of the box. It also provides a way to generate automatic
+help from the argument specification. It benifits from a wide range of third party packages that
+extend its functionality and huge user base that can help you with any problems you might face.</p>
+<p>Shell scripts on the other hand suffer in this area. While there are ways to parse command line
+arguments in shell scripts like <code class="code docutils literal notranslate"><span class="pre">bash</span></code> etc. they do not offer so many capabilities as Python’s
+<code class="code docutils literal notranslate"><span class="pre">argparse</span></code>, as simple as argument type validation or automatic help generation.</p>
+<p>Instead of reinventing the wheel for different shell scripting languages, this package provides a
+way to reuse the existing Python’s <code class="code docutils literal notranslate"><span class="pre">argparse</span></code> package in shell scripts and get all the
+functionalities built into it in any shell scripting language of your choice.</p>
+<p>All you need to do is to write your argument specification in Python like you do for any python
+script and do a one line black magic in your shell script, boom! you have all the power of Python’s
+<code class="code docutils literal notranslate"><span class="pre">argparse</span></code> in your shell script.</p>
+<p>If you are not familiar with Python’s <code class="code docutils literal notranslate"><span class="pre">argparse</span></code> package, here is how it looks like:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">argparse</span>
+
+<span class="k">def</span> <span class="nf">getArgParser</span><span class="p">():</span>
+    <span class="s1">&#39;Define and return the argparse object&#39;</span>
+
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s1">&#39;Sample argparse argument parser&#39;</span><span class="p">)</span>
+
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-i&#39;</span><span class="p">,</span> <span class="s1">&#39;--integer&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Integer&#39;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-s&#39;</span><span class="p">,</span> <span class="s1">&#39;--string&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;String&#39;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-l&#39;</span><span class="p">,</span> <span class="s1">&#39;--list&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;+&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;List of Strings&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">parser</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="n">getArgParser</span><span class="p">()</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">integer</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Now, to use this in your shell script, you need to do the following:</p>
+<ol class="arabic simple">
+<li><p>Import argparse_enh package.</p></li>
+<li><p>Instead of calling the <code class="code docutils literal notranslate"><span class="pre">parse_args()</span></code>, call <code class="code docutils literal notranslate"><span class="pre">ape.dumpArgs(getArgParser())</span></code></p></li>
+<li><p><cite>eval</cite> the output of the Python script in your shell script.</p></li>
+</ol>
+<p>Modified Python code looks like below</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">argparse</span>
+
+<span class="kn">import</span> <span class="nn">argparse_enh.argparse_enh</span> <span class="k">as</span> <span class="nn">ape</span>
+
+
+<span class="k">def</span> <span class="nf">getArgParser</span><span class="p">():</span>
+    <span class="s1">&#39;Define and return the argparse object&#39;</span>
+
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s1">&#39;Sample argparse argument parser&#39;</span><span class="p">)</span>
+
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-i&#39;</span><span class="p">,</span> <span class="s1">&#39;--integer&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Integer&#39;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-s&#39;</span><span class="p">,</span> <span class="s1">&#39;--string&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;String&#39;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-l&#39;</span><span class="p">,</span> <span class="s1">&#39;--list&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;+&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;List of Strings&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">parser</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">ape</span><span class="o">.</span><span class="n">dumpArgs</span><span class="p">(</span><span class="n">getArgParser</span><span class="p">())</span>
+</pre></div>
+</div>
+<p>Add below like of code or equivalent in your shell script.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/bin/bash</span>
+
+<span class="c1"># Parse the arguments using Python&#39;s argparse_enh</span>
+<span class="nb">eval</span><span class="w"> </span><span class="k">$(</span>sample_argparser.py<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$@</span><span class="s2">&quot;</span><span class="k">)</span>
+
+<span class="c1"># Print the parsed arguments</span>
+<span class="nb">set</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-P<span class="w"> </span><span class="s1">&#39;^opt_&#39;</span>
+</pre></div>
+</div>
 </section>
 
 
