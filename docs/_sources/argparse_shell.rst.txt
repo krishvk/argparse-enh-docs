@@ -28,44 +28,35 @@ If you are not familiar with Python's :code:`argparse` package, here is how it l
         'Define and return the argparse object'
 
         parser = argparse.ArgumentParser(description='Sample argparse argument parser')
-
         parser.add_argument('-i', '--integer', type=int, default=10, help='Integer')
         parser.add_argument('-s', '--string', type=str, required=True, help='String')
         parser.add_argument('-l', '--list', type=str, nargs='+', help='List of Strings')
-
         return parser
-
 
     if __name__ == '__main__':
         args = getArgParser().parse_args()
-        print(args.integer)
 
 Now, to use this in your shell script, you need to do the following:
 
 #. Import argparse_enh package.
 #. Instead of calling the :code:`parse_args()`, call :code:`ape.dumpArgs(getArgParser())`
-#. `eval` the output of the Python script in your shell script.
+#. :code:`eval` the output of the Python script in your shell script.
 
 Modified Python code looks like below
 
 .. code-block:: python
 
     import argparse
-
     import argparse_enh.argparse_enh as ape
-
 
     def getArgParser():
         'Define and return the argparse object'
 
         parser = argparse.ArgumentParser(description='Sample argparse argument parser')
-
         parser.add_argument('-i', '--integer', type=int, default=10, help='Integer')
         parser.add_argument('-s', '--string', type=str, required=True, help='String')
         parser.add_argument('-l', '--list', type=str, nargs='+', help='List of Strings')
-
         return parser
-
 
     if __name__ == '__main__':
         ape.dumpArgs(getArgParser())
