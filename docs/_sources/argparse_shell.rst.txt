@@ -1,6 +1,14 @@
 Argparse For Shell Scripts
 --------------------------
 
+In a nutshell
+=============
+
+Use Python's :code:`argparse` in any shell scripts.
+
+In Detail
+=========
+
 Python's :code:`argparse` is a great tool for creating command line interfaces. It is very easy to
 use and provides a lot of functionality out of the box. It also provides a way to generate automatic
 help from the argument specification. It benifits from a wide range of third party packages that
